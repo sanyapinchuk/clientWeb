@@ -4,17 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Холодильники</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="CreateFridge">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -31,9 +28,6 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
@@ -43,11 +37,28 @@
                 @Html.DisplayFor(modelItem => item.FridgeModelId)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <div class="fridgeButtons" onclick="SendDelete(@item.Id)">Удалить</div>
+                <a asp-controller="Fridge" asp-action="GetProducts" class="fridgeButtons" asp-route-id="@item.Id">Продукты</a>
+                <a asp-controller="Fridge" asp-action="Edit" class="fridgeButtons" asp-route-id="@item.Id">Изменить</a>
+              @{
+               /*@Html.ActionLink("Продукты", "~/Fridges", new { id = item.Id})
+               @Html.ActionLink("Edit", "Edit", new {  id=item.Id  }) |
+                 |
+                @Html.ActionLink("Delete", "Delete", new {  id=item.Id  })*/
+               } 
             </td>
         </tr>
 }
+
     </tbody>
 </table>
+<script>
+    function SendDelete(id)
+    {
+        if(confirm('Вы действительно хотите удалить этот холодильник?'))
+        {
+            let ref ="Fridges/Delete/"+id.toString();
+            fetch(ref, { method: 'DELETE' })
+        }
+    }
+</script>

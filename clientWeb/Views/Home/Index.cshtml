@@ -3,6 +3,10 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Добро пожаловать в сервис учета продуктов в холодильниках</h1>
 </div>
+<ul class="main_list_functions">
+    <li><a asp-area="" asp-controller="Fridge" asp-action="Index">Список всех холодильников</a></li>
+    <li><a asp-area="" asp-controller="Fridge" asp-action="CreateFridge">Добавить новый холодильник </a></li>
+    <li><a href="">Список всех продуктов</a></li>    
+</ul>

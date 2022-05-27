@@ -16,3 +16,12 @@ html {
 body {
   margin-bottom: 60px;
 }
+.fridgeButtons {
+    cursor: pointer;
+    color: #555;
+    text-decoration:none;
+    display: block;
+}
+.fridgeButtons:hover {
+    color: #888;
+}
