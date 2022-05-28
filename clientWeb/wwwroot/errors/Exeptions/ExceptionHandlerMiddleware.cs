@@ -34,11 +34,17 @@ namespace ClientWeb.errors.Exeptions
         private static Task HandleExceptionMessageAsync(HttpContext context, Exception exception)
         {
             //context.Response.ContentType = "text/HTML";
-            int statusCode = (int)HttpStatusCode.InternalServerError;
+           // int statusCode = (int)HttpStatusCode.InternalServerError;
+            int statusCode=  (int)context.Response.StatusCode;
             string result;
 
             switch (statusCode)
             {
+                case 400:
+                    {
+                        context.Response.Redirect("errors/400.html");
+                        return Task.CompletedTask;
+                    }
                 case 404:
                     {
                         context.Response.Redirect("errors/404.html");

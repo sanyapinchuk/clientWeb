@@ -4,6 +4,7 @@ using ClientWeb.Models;
 using Newtonsoft.Json;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+//using System.Web.Http;
 
 namespace ClientWeb.Controllers
 {
@@ -11,10 +12,10 @@ namespace ClientWeb.Controllers
     {
         // GET: Fridges
         [Route("Fridges")]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             IEnumerable<mvcFridge> fridgeList;
-            HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync("Fridge/getAll").Result;
+            HttpResponseMessage response = await GlobalVariables.WebApiClient.GetAsync("Fridge/getAll");
             fridgeList = response.Content.ReadAsAsync<IEnumerable<mvcFridge>>().Result;
             return View(fridgeList);
         }
@@ -104,6 +105,7 @@ namespace ClientWeb.Controllers
                             return RedirectToAction("Index");
                         }
                     }
+
                     return RedirectToAction("Index");
                 }
                 else
@@ -142,9 +144,29 @@ namespace ClientWeb.Controllers
 
         [HttpPost]
         [Route("Fridges/Edit")]
-        public async Task<ActionResult> EditPost([FromBody] mvcFridge fridge)
+        public async Task<ActionResult> EditPost(int fridgeId, string Name, string Owner_name, int FridgeModelId)
         {
-
+            mvcFridge fridge = new()
+            {
+                Id = fridgeId,
+                Name = Name,
+                Owner_name = Owner_name,
+                FridgeModelId = FridgeModelId
+            };
+            var json = JsonConvert.SerializeObject(fridge, Formatting.Indented);
+            var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await GlobalVariables.WebApiClient.PutAsync($"Fridge/edit/{fridgeId}", stringContent);
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+              //  return StatusCode(404);
+                // await Response.WriteAsync("<script language=javascript>alert('Холодильник не был обналвен')</script>", Encoding.Unicode);
+                return StatusCode(((int)response.StatusCode));
+               // throw new System.Web.Http.HttpResponseException(response.StatusCode);
+            }
         }
 
         // GET: FridgeController/Delete/5

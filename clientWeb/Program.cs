@@ -11,16 +11,17 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    //app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseStatusCodePagesWithRedirects("/errors/404.html");
-//app.UseStatusCodePagesWithReExecute("/errors", "?code={0}.html");
+app.UseStatusCodePagesWithRedirects("/Error/?statusCode={0}");
+//app.UseStatusCodePagesWithReExecute("/Error", "?statusCode={0}");
 
 //app.UseExceptionHandler("/Home/Error");
-app.UseExceptionHandlerMiddleware();
+//app.UseExceptionHandlerMiddleware();
+//app.UseStatusCodePagesWithRedirects("/errors/404.html");
 
 app.UseHttpsRedirection();
 

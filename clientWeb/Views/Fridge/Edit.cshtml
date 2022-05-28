@@ -10,16 +10,12 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="EditPost">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
+            <input type="hidden" name="fridgeId" value = @Model.Id>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" required />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -29,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="FridgeModelId" class="control-label"></label>
-                <input asp-for="FridgeModelId" class="form-control" />
+                <input asp-for="FridgeModelId" class="form-control" min="1"/>
                 <span asp-validation-for="FridgeModelId" class="text-danger"></span>
             </div>
             <div class="form-group">
