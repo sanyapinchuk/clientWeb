@@ -57,9 +57,10 @@ namespace ClientWeb.Controllers
             HttpResponseMessage response2
                 = GlobalVariables.WebApiClient.GetAsync("Product/getAll").Result;
             productList = response2.Content.ReadAsAsync<IEnumerable<mvcProduct>>().Result;
-
-            ViewData["models"] = modelList;
-            ViewData["products"] = productList;
+            if (modelList != null)
+                ViewData["models"] = modelList;
+            if (productList != null)
+                ViewData["products"] = productList;
             return View();
         }
 
@@ -102,10 +103,10 @@ namespace ClientWeb.Controllers
                         if (!response2.IsSuccessStatusCode)
                         {
                             await Response.WriteAsync("<script>alert('Не все продукты были добавлены')</script>", Encoding.Unicode);
-                            return RedirectToAction("Index");
+                            break;
                         }
                     }
-
+                        
                     return RedirectToAction("Index");
                 }
                 else
@@ -114,9 +115,6 @@ namespace ClientWeb.Controllers
                     return RedirectToAction("Index");
                 }
                 
-
-
-                 
              }
              else
              {
@@ -135,6 +133,15 @@ namespace ClientWeb.Controllers
             if (response.IsSuccessStatusCode)
             {
                 mvcFridge fridge = await response.Content.ReadAsAsync<mvcFridge>();
+
+                IEnumerable<mvcFridgeModel> modelList = new List<mvcFridgeModel>();
+                HttpResponseMessage response2 = GlobalVariables.WebApiClient
+                    .GetAsync("FridgeModel/getAll").Result;
+                modelList = response2.Content.ReadAsAsync<IEnumerable<mvcFridgeModel>>().Result;
+
+                if(modelList!=null)
+                    ViewData["models"] = modelList;
+
                 return View(fridge);
             }
             else

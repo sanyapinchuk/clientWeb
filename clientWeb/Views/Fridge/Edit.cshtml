@@ -23,11 +23,24 @@
                 <input asp-for="Owner_name" class="form-control" />
                 <span asp-validation-for="Owner_name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="FridgeModelId" class="control-label"></label>
-                <input asp-for="FridgeModelId" class="form-control" min="1"/>
-                <span asp-validation-for="FridgeModelId" class="text-danger"></span>
-            </div>
+            @foreach (var item in (IEnumerable<ClientWeb.Models.mvcFridgeModel>)ViewData["models"]) 
+            {
+                <table>
+                    <tr>
+                        <td>
+                            <input type="radio" class="idModels" name="FridgeModelId" value= @item.Id>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            (@Html.DisplayFor(modelItem => item.Year) г.)
+                        </td>
+                    
+                     </tr>
+                </table>    
+               
+            }
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -36,7 +49,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Назад к списку</a>
 </div>
 
 @section Scripts {

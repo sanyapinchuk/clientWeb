@@ -12,7 +12,7 @@ namespace ClientWeb.Controllers
         [HttpGet("/error")]
         public IActionResult Error(int? statusCode = null)
         {
-            if (statusCode.HasValue)
+                if (statusCode.HasValue)
             {
                 this.HttpContext.Response.StatusCode = statusCode.Value;
             }
