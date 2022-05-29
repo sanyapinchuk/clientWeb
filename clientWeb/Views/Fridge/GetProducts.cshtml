@@ -4,44 +4,53 @@
     ViewData["Title"] = "GetProducts";
 }
 
-<h1>All products in fridge</h1>
+<h1>Все продукты в холодильнике</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Добавить холодильник</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                Quantity
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Default_quantity)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
+@if(Model!= null && Model.Count()!=0)
+{
+    <form asp-action="ChangeCountProducts"> 
+        <input type="hidden" name="fridgeId" value = @ViewData["fridgeId"]>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        Quantity
+                    </th>
+                
+                </tr>
+            </thead>
+            <tbody>
+        @foreach (var item in Model) {
+                <input type="hidden" name="productsId" value = @item.Id>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <input type="number" class="productCount" min="0" name= "productCount" value=@item.Default_quantity>
+                    </td>
+                </tr>
+        }
+            </tbody>
+        </table>
+        <div class="form-group">
+            <input type="submit" value="Сохранить" class="btn btn-primary" />
+        </div>
+   </form>
 }
-    </tbody>
-</table>
+else
+{
+    <h3>В данном холожильнике нет продуктов</h3>
+}

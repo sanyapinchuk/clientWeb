@@ -31,6 +31,7 @@ namespace ClientWeb.Controllers
             {
                 //fridgeList = response.Content.ReadFromJsonAsync<IEnumerable<(int Item1, string Item2, int Item3)>>().Result;
                 fridgeList = response.Content.ReadAsAsync<IEnumerable<mvcProduct>>().Result;
+                ViewData["fridgeId"] = id;
                 return View(fridgeList);
             }
             else
@@ -176,7 +177,7 @@ namespace ClientWeb.Controllers
             }
         }
 
-        // GET: FridgeController/Delete/5
+
         [HttpDelete]
         [Route("Fridges/Delete/{id}")]
         public ActionResult Delete(int id)
@@ -196,6 +197,42 @@ namespace ClientWeb.Controllers
 
         }
 
+        
+        [HttpPost]
+        [Route("Fridges/ChangeProducts")]
+        public async Task<ActionResult> ChangeCountProducts(int fridgeId, int[] productsId, int[] productCount)
+        {
+            var firstResponse =  await GlobalVariables.WebApiClient.GetAsync($"Fridge/getProducts/{fridgeId}");
+           if (firstResponse.IsSuccessStatusCode)
+            {
+                var productsDb = await firstResponse.Content.ReadAsAsync<IList<mvcProduct>>();
+                for(int i = 0; i < productsId.Length; i++)
+                {
+                    if(productCount[i] != productsDb[i].Default_quantity)
+                    {
+                        var fr_pr = new mvcFridge_Product()
+                        {
+                            FridgeId = fridgeId,
+                            ProductId = productsId[i],
+                            Quantity = productCount[i]
+                        };
 
+                        var json = JsonConvert.SerializeObject(fr_pr, Formatting.Indented);
+
+                        var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+                        var secResponse = await GlobalVariables.WebApiClient.PutAsync("Fridge/changeCountProducts", stringContent);
+                        if (!secResponse.IsSuccessStatusCode)
+                        {
+                            return StatusCode((int)secResponse.StatusCode);
+                        }
+                    }
+
+                }
+                Response.StatusCode = 200;
+                return RedirectToAction($"Index");
+            }
+            else
+                return StatusCode((int)firstResponse.StatusCode);
+        }
     }
 }
