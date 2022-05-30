@@ -6,4 +6,23 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Include="wwwroot\errors\Exeptions\ExceptionHandlerMiddleware.cs" />
+    <Compile Include="wwwroot\errors\Exeptions\ExceptionHandlerMiddlewareExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\errors\403.html" />
+    <None Include="wwwroot\errors\404.html" />
+    <None Include="wwwroot\errors\500.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.8" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.8" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
+  </ItemGroup>
+
 </Project>

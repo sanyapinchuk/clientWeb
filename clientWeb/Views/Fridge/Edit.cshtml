@@ -1,0 +1,56 @@
+﻿@model ClientWeb.Models.mvcFridge
+
+@{
+    ViewData["Title"] = "Редактировать холодильник";
+}
+
+<h1>Редактировать холодильник</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditPost">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="fridgeId" value = @Model.Id>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Owner_name" class="control-label"></label>
+                <input asp-for="Owner_name" class="form-control" />
+                <span asp-validation-for="Owner_name" class="text-danger"></span>
+            </div>
+            @foreach (var item in (IEnumerable<ClientWeb.Models.mvcFridgeModel>)ViewData["models"]) 
+            {
+                <table>
+                    <tr>
+                        <td>
+                            <input type="radio" class="idModels" name="FridgeModelId" value= @item.Id>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            (@Html.DisplayFor(modelItem => item.Year) г.)
+                        </td>
+                    
+                     </tr>
+                </table>    
+               
+            }
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад к списку</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

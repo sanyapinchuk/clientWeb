@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewData["Title"] = "Заполнение холодильников";
+}
+
+<h1>Заполнить холодильники автоматически</h1>
+
+<h2 style="margin-top:20px;">Вы уверены, что хотите заполнить холодильники продуктами автоматически?</h2>
+<div id="confirmWrapper">
+    <button class="ConfirmButton" onclick="FillFridges()">Да</button>
+    <a asp-action="Index" class="ConfirmButton">На главную</a>
+</div>
+
+
+<script>
+    function FillFridges()
+    {
+        let ref ="AddDefaultCountProducts";
+        fetch(ref, { method: 'PUT' })        
+    }
+</script>

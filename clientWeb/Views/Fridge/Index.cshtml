@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ClientWeb.Models.mvcFridge>
+
+@{
+    ViewData["Title"] = "Холодильники";
+}
+
+<h1>Холодильники</h1>
+
+<p>
+    <a asp-action="CreateFridge">Создать новый</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Название
+            </th>
+            <th>
+                Имя владельца
+            </th>
+            <th>
+                Модель холодильника
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Owner_name)
+            </td>
+            <td>
+                @(((IEnumerable<mvcFridgeModel>)ViewData["models"]).Where(m=>m.Id== item.FridgeModelId).FirstOrDefault().Name)
+            </td>
+            <td>
+                <div class="fridgeButtons" onclick="SendDelete(@item.Id)">Удалить</div>
+                <a asp-controller="Fridge" asp-action="GetProducts" class="fridgeButtons" asp-route-id="@item.Id">Продукты</a>
+                <a asp-controller="Fridge" asp-action="Edit" class="fridgeButtons" asp-route-id="@item.Id">Изменить</a>
+            </td>
+        </tr>
+}
+
+    </tbody>
+</table>
+<script>
+    function SendDelete(id)
+    {
+        if(confirm('Вы действительно хотите удалить этот холодильник?'))
+        {
+            let ref ="Fridges/Delete/"+id.toString();
+            fetch(ref, { method: 'DELETE' })
+        }
+    }
+</script>

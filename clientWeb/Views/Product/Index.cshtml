@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ClientWeb.Models.mvcProduct>
+
+@{
+    ViewData["Title"] = "Продукты";
+}
+
+<h1>Все продукты</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Название
+            </th>
+            <th>
+                Количество по умолчанию
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Default_quantity)
+            </td>
+            <td>
+                <a asp-controller="Product" asp-action="EditProduct" class="fridgeButtons" asp-route-id="@item.Id">Изменить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

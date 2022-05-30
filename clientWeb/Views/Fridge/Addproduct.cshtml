@@ -1,0 +1,79 @@
+﻿@model IEnumerable<ClientWeb.Models.mvcProduct>
+
+@{
+    ViewData["Title"] = "Добавить продукты";
+}
+@if((((IEnumerable<mvcProduct>)ViewData["existProduct"])).Count()>0)
+{
+    <h2>Существущие продукты</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Название
+                </th>
+                <th>
+                    Количество
+                </th>
+            </tr>
+        </thead> 
+        <tbody>
+            @foreach (var item in (IEnumerable<mvcProduct>)ViewData["existProduct"]) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Default_quantity)
+                    </td>
+                </tr>
+            }
+        </tbody>
+</table>
+
+}
+
+@if(Model.Count()>0)
+{
+    <h2>Добавить продукт</h2>
+<form asp-action="AddProductForm">
+    <input type="hidden" name="idFridge" value = @ViewData["idFridge"]>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Название
+                </th>
+                <th>
+                    Количество
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead> 
+        <tbody>
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <input type="number" class="productCount" disabled min="0" name= "productCount" value=@item.Default_quantity>
+                    </td>
+                    <td>                
+                        <input type="checkbox" id= @item.Id name ="productId" value= @item.Id class="checkboxHidden" />
+                        <label for= @item.Id class="buttonForCheckboxHidden">Добавить</label>            
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="form-group">
+        <input type="submit" value="Сохранить" class="btn btn-primary" />
+    </div>
+    </form>
+}
+else
+{
+    <h2>Все виды продуктов уже добавлены</h2>
+}

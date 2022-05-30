@@ -1,0 +1,84 @@
+﻿
+@model ClientWeb.Models.mvcFridge
+@{
+    ViewData["Title"] = "Добавить холодильник";
+}
+
+<h1>Создать холодильник</h1>
+
+<form asp-action="CreateFridgeForm"> 
+    <table class="table my_tables">
+        <thead>
+            <tr>
+                <th>
+                    Модель
+                </th>
+                <th>
+                    Год выпуска
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in (IEnumerable<ClientWeb.Models.mvcFridgeModel>)ViewData["models"]) 
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Year)
+                    </td>
+                    <td>
+                        <input type="radio" class="idModels" name="idModel" value= @item.Id>
+                    </td>
+                </tr>
+            }        
+        </tbody>
+    </table>
+
+    <table class="table my_tables">
+        <thead>
+            <tr>
+                <th>
+                    Название
+                </th>
+                <th>
+                    Количество по умолчанию
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+            
+        <tbody>
+            @foreach (var item in (IEnumerable<ClientWeb.Models.mvcProduct>)ViewData["products"]) 
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Default_quantity)
+                    </td>
+                    <td>
+                        <input type="checkbox" name= "SelectedProducts" value= @item.Id>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" required/>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Owner_name" class="control-label"></label>
+        <input asp-for="Owner_name" class="form-control" />
+        <span asp-validation-for="Owner_name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Добавить" class="btn btn-primary" />
+    </div>
+</form>
+
