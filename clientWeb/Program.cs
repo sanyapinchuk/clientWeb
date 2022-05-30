@@ -15,12 +15,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 } 
 
-//app.UseStatusCodePagesWithRedirects("/Error/?statusCode={0}");
 app.UseStatusCodePagesWithReExecute("/Error", "?statusCode={0}");
 
 
 app.UseExceptionHandlerMiddleware();
-//app.UseStatusCodePagesWithRedirects("/errors/404.html");
 
 app.UseHttpsRedirection();
 
