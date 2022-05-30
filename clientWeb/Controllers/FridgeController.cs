@@ -155,7 +155,7 @@ namespace ClientWeb.Controllers
             else
             {
                 Request.Method = "GET";
-                return RedirectToAction("Index");
+                return Redirect($"{idFridge}");
             }
                 
             
@@ -297,7 +297,7 @@ namespace ClientWeb.Controllers
             else
             {
                 Request.Method = "GET";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","Home");
             }
 
         }
@@ -350,7 +350,7 @@ namespace ClientWeb.Controllers
             if (response.IsSuccessStatusCode)
             {       
                 Request.Method = "GET";
-                return RedirectToAction("GetProducts",fridgeId);
+                return Redirect($"{fridgeId}");
             }
             else
                 return StatusCode((int)response.StatusCode);
