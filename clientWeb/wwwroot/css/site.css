@@ -31,3 +31,17 @@ body {
 .productCount{
     width:70px;
 }
+.checkboxHidden{
+    display:none;
+}
+.buttonForCheckboxHidden {
+    user-select: none;
+    border-radius: 5px;
+    background-color: #0D6EFD;
+    padding:5px;
+    cursor:pointer;
+    color: white;
+}
+.checkboxHidden:checked + .buttonForCheckboxHidden {
+    background-color: #B6B6B6;
+}

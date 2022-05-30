@@ -48,6 +48,6 @@ namespace ClientWeb.Controllers
             return StatusCode((int)response.StatusCode);
         }
 
-
+        
     }
 }

@@ -7,9 +7,10 @@
 <h1>Все продукты в холодильнике</h1>
 
 <p>
-    <a asp-action="Create">Добавить холодильник</a>
+    <a href="AddProduct/@ViewData["fridgeId"]">Добавить продукт</a>
 </p>
 @if(Model!= null && Model.Count()!=0)
+
 {
     <form asp-action="ChangeCountProducts"> 
         <input type="hidden" name="fridgeId" value = @ViewData["fridgeId"]>
@@ -17,13 +18,10 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Id)
+                        Название
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Name)
-                    </th>
-                    <th>
-                        Quantity
+                        Количество
                     </th>
                 
                 </tr>
@@ -33,18 +31,19 @@
                 <input type="hidden" name="productsId" value = @item.Id>
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
                     <td>
                         <input type="number" class="productCount" min="0" name= "productCount" value=@item.Default_quantity>
                     </td>
+                    <td>
+                        <div class="fridgeButtons" onclick="SendDelete(@item.Id)">Удалить</div>
+                    </td>
                 </tr>
         }
             </tbody>
         </table>
+
         <div class="form-group">
             <input type="submit" value="Сохранить" class="btn btn-primary" />
         </div>
@@ -54,3 +53,14 @@ else
 {
     <h3>В данном холожильнике нет продуктов</h3>
 }
+
+<script>
+    function SendDelete(idProduct)
+    {
+        if(confirm('Вы действительно хотите удалить этот продукт?'))
+        {
+            let ref ="DeleteFromFridge/"+@ViewData["fridgeId"]+"/"+ idProduct;
+            fetch(ref, { method: 'DELETE' })
+        }
+    }
+</script>

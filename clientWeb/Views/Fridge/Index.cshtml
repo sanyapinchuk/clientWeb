@@ -13,13 +13,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Название
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Owner_name)
+                Имя владельца
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FridgeModelId)
+                Модель холодильника
             </th>
             <th></th>
         </tr>
@@ -40,12 +40,6 @@
                 <div class="fridgeButtons" onclick="SendDelete(@item.Id)">Удалить</div>
                 <a asp-controller="Fridge" asp-action="GetProducts" class="fridgeButtons" asp-route-id="@item.Id">Продукты</a>
                 <a asp-controller="Fridge" asp-action="Edit" class="fridgeButtons" asp-route-id="@item.Id">Изменить</a>
-              @{
-               /*@Html.ActionLink("Продукты", "~/Fridges", new { id = item.Id})
-               @Html.ActionLink("Edit", "Edit", new {  id=item.Id  }) |
-                 |
-                @Html.ActionLink("Delete", "Delete", new {  id=item.Id  })*/
-               } 
             </td>
         </tr>
 }

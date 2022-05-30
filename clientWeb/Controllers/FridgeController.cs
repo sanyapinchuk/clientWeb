@@ -4,6 +4,8 @@ using ClientWeb.Models;
 using Newtonsoft.Json;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Diagnostics.CodeAnalysis;
+using ClientWeb.Models.Common;
 //using System.Web.Http;
 
 namespace ClientWeb.Controllers
@@ -25,14 +27,14 @@ namespace ClientWeb.Controllers
         [Route("Fridges/{id}")]
         public ActionResult GetProducts(int id)
         {
-            IEnumerable<mvcProduct> fridgeList = new List<mvcProduct>();
+            IEnumerable<mvcProduct> productList = new List<mvcProduct>();
             HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync($"Fridge/getProducts/{id}").Result;
             if (response.IsSuccessStatusCode)
             {
                 //fridgeList = response.Content.ReadFromJsonAsync<IEnumerable<(int Item1, string Item2, int Item3)>>().Result;
-                fridgeList = response.Content.ReadAsAsync<IEnumerable<mvcProduct>>().Result;
+                productList = response.Content.ReadAsAsync<IEnumerable<mvcProduct>>().Result;
                 ViewData["fridgeId"] = id;
-                return View(fridgeList);
+                return View(productList);
             }
             else
             {
@@ -65,6 +67,77 @@ namespace ClientWeb.Controllers
             return View();
         }
 
+
+
+        [HttpGet]
+        [Route("Fridges/AddProduct/{idFridge}")]
+        public ActionResult AddProduct(int idFridge)
+        {
+            IEnumerable<mvcProduct> productList;
+            HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync($"Fridge/getProducts/{idFridge}").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                //fridgeList = response.Content.ReadFromJsonAsync<IEnumerable<(int Item1, string Item2, int Item3)>>().Result;
+                productList = response.Content.ReadAsAsync<IEnumerable<mvcProduct>>().Result;
+
+            }
+            else
+            {
+                // TempData["ErrorMessage"] = "Холодильника с таким id не существует";
+                return StatusCode(404);
+            }
+
+
+            IEnumerable<mvcProduct> allProductList;
+            HttpResponseMessage response2
+                = GlobalVariables.WebApiClient.GetAsync("Product/getAll").Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                allProductList = response2.Content.ReadAsAsync<IEnumerable<mvcProduct>>().Result;
+            }
+            else
+            {
+                return StatusCode(500);
+            }
+
+            ViewData["existProduct"] = productList;
+            ViewData["idFridge"] = idFridge;
+           
+
+
+            allProductList= allProductList.Except(productList,new mvcProductComparer()); // all products that not exist in fridge
+            
+            return View(allProductList);
+        }
+
+
+        [HttpPost]
+        [Route("Fridges/AddProduct")]
+        public async Task<ActionResult> AddProductForm(int idFridge, int[] productCount, int[] productId)
+        {
+            bool notAdded = false;
+            for (int i= 0; i < productCount.Length; ++i)
+            {
+                var fr_pr = new mvcFridge_Product()
+                {
+                    FridgeId = idFridge,
+                    ProductId = productId[i],
+                    Quantity = productCount[i]
+                };
+                var json = JsonConvert.SerializeObject(fr_pr, Formatting.Indented);
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await GlobalVariables.WebApiClient.PostAsync("Fridge/addProduct", stringContent);
+                if(!response.IsSuccessStatusCode)
+                    notAdded= true;
+            }
+            if (notAdded)
+                return StatusCode(500, "Not all products was added");
+            else
+                return RedirectToAction("Index");
+            
+        }
 
          [HttpPost]
          [Route("Fridges/Create")]
@@ -176,8 +249,7 @@ namespace ClientWeb.Controllers
                // throw new System.Web.Http.HttpResponseException(response.StatusCode);
             }
         }
-
-
+            
         [HttpDelete]
         [Route("Fridges/Delete/{id}")]
         public ActionResult Delete(int id)
@@ -234,5 +306,22 @@ namespace ClientWeb.Controllers
             else
                 return StatusCode((int)firstResponse.StatusCode);
         }
+
+
+        [HttpDelete]
+        [Route("Fridges/DeleteFromFridge/{fridgeId}/{productId}")]
+        public async Task<IActionResult> DeleteProductFromFridge(int fridgeId, int productId)
+        {
+            var response = await GlobalVariables.WebApiClient.DeleteAsync($"Fridge/removeProduct/{fridgeId}/{productId}");
+            if (response.IsSuccessStatusCode)
+            {       
+                return RedirectToAction("GetProducts",fridgeId);
+            }
+            else
+                return StatusCode((int)response.StatusCode);
+        }
+
     }
+
+
 }

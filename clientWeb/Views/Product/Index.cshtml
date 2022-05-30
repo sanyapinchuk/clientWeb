@@ -4,19 +4,16 @@
     ViewData["Title"] = "Продукты";
 }
 
-<h1>Index</h1>
+<h1>Все продукты</h1>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+                Название
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Default_quantity)
+                Количество по умолчанию
             </th>
             <th></th>
         </tr>
@@ -24,9 +21,6 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
