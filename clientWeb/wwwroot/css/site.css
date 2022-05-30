@@ -16,6 +16,14 @@ html {
 body {
   margin-bottom: 60px;
 }
+a{
+    text-decoration:none;
+
+}
+h1, h2, h3, h4{
+    text-align:center;
+    margin:auto;    
+}
 .fridgeButtons {
     cursor: pointer;
     color: #555;
@@ -45,3 +53,66 @@ body {
 .checkboxHidden:checked + .buttonForCheckboxHidden {
     background-color: #B6B6B6;
 }
+.ConfirmButton {
+    display: inline-block;
+    width: 150px;
+    height: 50px;
+    background-color: #0D6EFD;
+    font-size:25px;
+    color:white;
+    text-align:center;
+    text-decoration:none;
+    padding:0;
+    margin:0;
+    border:1px solid #444;
+    line-height:50px;
+    user-select:none;
+    transition: all 0.8s;
+}
+.ConfirmButton:hover {
+    background-color: #B6B6B6;
+    color:#333;
+  
+}
+#confirmWrapper{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    width:500px;
+    margin:auto;
+}
+
+.main_list_functions{
+    display:flex;
+    justify-content:space-evenly;
+    flex-wrap:wrap;
+    align-items:center;
+}
+
+.main_list_functions > a {
+    list-style-type: none;
+    display: flex;
+    background-color: #0D6EFD;
+    border: 1px solid #444;
+    border-radius: 7px;
+    margin: 10px;
+    width: 300px;
+    height: 100px;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    padding: 15px;
+    font-size: 20px;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.4s;
+}
+.main_list_functions > a:hover {
+    background-color: #B6B6B6;
+    color:#222;
+}
+.main_list_functions > a > div {
+    text-align: center;
+    margin: auto;
+}
+    

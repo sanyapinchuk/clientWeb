@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ClientWeb.Models.mvcFridge>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Холодильники";
 }
 
 <h1>Холодильники</h1>
@@ -34,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.Owner_name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FridgeModelId)
+                @(((IEnumerable<mvcFridgeModel>)ViewData["models"]).Where(m=>m.Id== item.FridgeModelId).FirstOrDefault().Name)
             </td>
             <td>
                 <div class="fridgeButtons" onclick="SendDelete(@item.Id)">Удалить</div>

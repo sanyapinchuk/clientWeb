@@ -29,6 +29,9 @@ namespace ClientWeb.Controllers
                 case 404:
                     ViewData["Message"] = "Ресурс не найден!";
                     break;
+                case 405:
+                    ViewData["Message"] = "Метод Htpp не разрешен";
+                    break;
                 case 500:
                     ViewData["Message"] = "Ошибка сервера";
                     break;

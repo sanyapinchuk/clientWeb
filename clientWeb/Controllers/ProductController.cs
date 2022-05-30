@@ -43,6 +43,7 @@ namespace ClientWeb.Controllers
             var response = await GlobalVariables.WebApiClient.PutAsync($"Product/Edit/{idProduct}", stringContent); 
             if(response.IsSuccessStatusCode)
             {
+                Request.Method = "GET";
                 return RedirectToAction("Index");
             }
             return StatusCode((int)response.StatusCode);

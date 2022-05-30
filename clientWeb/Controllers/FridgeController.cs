@@ -18,8 +18,28 @@ namespace ClientWeb.Controllers
         {
             IEnumerable<mvcFridge> fridgeList;
             HttpResponseMessage response = await GlobalVariables.WebApiClient.GetAsync("Fridge/getAll");
-            fridgeList = response.Content.ReadAsAsync<IEnumerable<mvcFridge>>().Result;
-            return View(fridgeList);
+            if(response.IsSuccessStatusCode)
+            {
+                fridgeList = response.Content.ReadAsAsync<IEnumerable<mvcFridge>>().Result;
+
+
+                IEnumerable<mvcFridgeModel> modelList = new List<mvcFridgeModel>();
+                HttpResponseMessage response2 = GlobalVariables.WebApiClient
+                    .GetAsync("FridgeModel/getAll").Result;
+                if(response2.IsSuccessStatusCode)
+                {
+                    modelList = response2.Content.ReadAsAsync<IEnumerable<mvcFridgeModel>>().Result;
+
+                    if (modelList != null)
+                        ViewData["models"] = modelList;
+
+                    return View(fridgeList);
+                }
+                return StatusCode((int)response2.StatusCode);
+               
+            }
+            return StatusCode((int)response.StatusCode);
+
         }
 
         // GET: Fridges/{id}
@@ -31,21 +51,19 @@ namespace ClientWeb.Controllers
             HttpResponseMessage response = GlobalVariables.WebApiClient.GetAsync($"Fridge/getProducts/{id}").Result;
             if (response.IsSuccessStatusCode)
             {
-                //fridgeList = response.Content.ReadFromJsonAsync<IEnumerable<(int Item1, string Item2, int Item3)>>().Result;
                 productList = response.Content.ReadAsAsync<IEnumerable<mvcProduct>>().Result;
                 ViewData["fridgeId"] = id;
                 return View(productList);
             }
             else
             {
-                // TempData["ErrorMessage"] = "Холодильника с таким id не существует";
                 return StatusCode(404);
             }
             
            
         }
 
-        // GET: FridgeController/Create
+
         [HttpGet]
         [Route("Fridges/Create")]
         public ActionResult CreateFridge()
@@ -135,7 +153,11 @@ namespace ClientWeb.Controllers
             if (notAdded)
                 return StatusCode(500, "Not all products was added");
             else
+            {
+                Request.Method = "GET";
                 return RedirectToAction("Index");
+            }
+                
             
         }
 
@@ -145,16 +167,9 @@ namespace ClientWeb.Controllers
                                              int idModel, int[] SelectedProducts)
          {
              fridge.FridgeModelId = idModel;
-           //  fridge.FridgeModel = new mvcFridgeModel();
              fridge.Fridge_Products = new List<mvcFridge_Product>();
-             //var temp = new { Name = fridge.Name, Owner_name = fridge.Owner_name, FridgeModelId= idModel };
              var json = JsonConvert.SerializeObject(fridge, Formatting.Indented);
              var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
-             /* var response
-                  = await GlobalVariables.WebApiClient.PostAsync("Fridge/addFridge"+
-                  "?Name="+fridge.Name+"&Owner_name="+fridge.Owner_name+"&FridgeModelId="
-                  +idModel.ToString(), null);
-             */
              var response
                   = await GlobalVariables.WebApiClient.PostAsync("Fridge/addFridge", stringContent);
              if (response.IsSuccessStatusCode) 
@@ -180,23 +195,42 @@ namespace ClientWeb.Controllers
                             break;
                         }
                     }
-                        
-                    return RedirectToAction("Index");
+                    
                 }
                 else
                 {
                     await Response.WriteAsync("<script language=javascript>alert('Продукты были добавлены')</script>", Encoding.Unicode);
-                    return RedirectToAction("Index");
+
                 }
                 
              }
              else
              {
                  await Response.WriteAsync("<script language=javascript>alert('Холодильник не был добавлен')</script>", Encoding.Unicode);
-                 return Ok();
              }
-         }
-         
+            Request.Method = "GET";
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Route("Fridges/AddDefaultCountProducts")]
+        public IActionResult AddDefaultCountProducts()
+        {
+            return View();
+        }
+
+        [HttpPut]
+        [Route("Fridges/AddDefaultCountProducts")]
+        public async Task<IActionResult> AddDefaultCountProductsPut()
+        {
+            var response = await GlobalVariables.WebApiClient.PutAsync("Fridge/addDefaultProduct", null);
+            if(response.IsSuccessStatusCode)
+            {
+                Request.Method = "GET";
+               return RedirectToAction("Index");
+            }
+            return StatusCode((int)response.StatusCode);
+        }
 
         // GET: FridgeController/Edit/5
         [HttpGet]
@@ -239,14 +273,12 @@ namespace ClientWeb.Controllers
             var response = await GlobalVariables.WebApiClient.PutAsync($"Fridge/edit/{fridgeId}", stringContent);
             if (response.IsSuccessStatusCode)
             {
+                Request.Method = "GET";
                 return RedirectToAction("Index");
             }
             else
             {
-              //  return StatusCode(404);
-                // await Response.WriteAsync("<script language=javascript>alert('Холодильник не был обналвен')</script>", Encoding.Unicode);
                 return StatusCode(((int)response.StatusCode));
-               // throw new System.Web.Http.HttpResponseException(response.StatusCode);
             }
         }
             
@@ -263,8 +295,9 @@ namespace ClientWeb.Controllers
                 return StatusCode(400, "Ошибка удлаения");
             }
             else
-            {                
-                return StatusCode(200, "Удалено");
+            {
+                Request.Method = "GET";
+                return RedirectToAction("Index");
             }
 
         }
@@ -301,7 +334,8 @@ namespace ClientWeb.Controllers
 
                 }
                 Response.StatusCode = 200;
-                return RedirectToAction($"Index");
+                Request.Method = "GET";
+                return RedirectToAction("Index");
             }
             else
                 return StatusCode((int)firstResponse.StatusCode);
@@ -315,6 +349,7 @@ namespace ClientWeb.Controllers
             var response = await GlobalVariables.WebApiClient.DeleteAsync($"Fridge/removeProduct/{fridgeId}/{productId}");
             if (response.IsSuccessStatusCode)
             {       
+                Request.Method = "GET";
                 return RedirectToAction("GetProducts",fridgeId);
             }
             else
